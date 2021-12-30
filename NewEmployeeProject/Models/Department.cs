@@ -43,6 +43,7 @@ namespace NewEmployeeProject.Models
         }
         private double _salarylimit;
         public Employee[] Employees = { };
+        
 
         public Department(string name, int workerLimit, double salarylimit)
         {
@@ -51,6 +52,18 @@ namespace NewEmployeeProject.Models
             SlaryLimit = salarylimit;
             Name = name;
 
+        }
+        public double TotalSalaryCount()
+        {
+            double TotalSalary = 0;
+            foreach (Employee item in Employees)
+            {
+                if (item != null && item.DepartamnetName.ToLower() == Name.ToLower())
+                {
+                    TotalSalary += item.Salary;
+                }
+            }
+            return TotalSalary;
         }
         public double CalcSalaryAverage()
         {
@@ -64,11 +77,19 @@ namespace NewEmployeeProject.Models
                     totalAmount += item.Salary;
                 }
             }
-            return totalAmount / count;
+            if (count <= 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return totalAmount / count;
+            }
+            
         }
         public override string ToString()
         {
-            return $"Department: {Name} \nWorker Limit: {WorkerLimit} \nSalary Limit: {SlaryLimit} \nAvarage Salary: {CalcSalaryAverage()}";
+            return $"Department: {Name.ToUpper()} \nWorker Limit: {WorkerLimit} \nSalary Limit: {SlaryLimit} \nAvarage Salary: {CalcSalaryAverage()} \nTotal Salary: {TotalSalaryCount()}";
         }
     }
 }

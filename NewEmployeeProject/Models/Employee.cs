@@ -58,7 +58,7 @@ namespace NewEmployeeProject.Models
         }
         public override string ToString()
         {
-            return $"Full name: {Fullname} \nSalary: {Salary} \nNo: {No.ToUpper()} \nPosition: {Position} \nDepatmenName: {DepartamnetName}";
+            return $"Full name: {Fullname} \nSalary: {Salary} \nNo: {No.ToUpper()} \nPosition: {Position} \nDepatmenName: {DepartamnetName.ToUpper()}";
         }
     }
 }

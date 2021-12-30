@@ -60,7 +60,7 @@ namespace NewEmployeeProject.Service
                 {
                     for (int i = 0; i < item.Employees.Length; i++)
                     {
-                        if (item.Employees[i] != null && item.Employees[i].No == EmpNo && item.Employees[i].DepartamnetName == DepName)
+                        if (item.Employees[i] != null && item.Employees[i].No.ToUpper() == EmpNo.ToUpper() && item.Employees[i].DepartamnetName.ToLower() == DepName.ToLower())
                         {
                             item.Employees[i] = null;
                             return;
@@ -78,7 +78,7 @@ namespace NewEmployeeProject.Service
             {
                 foreach (Employee item2 in item.Employees)
                 {
-                    if (item2 != null && item2.No == EmpNO && item2.Fullname == FullName)
+                    if (item2 != null && item2.No.ToUpper() == EmpNO.ToUpper() && item2.Fullname.ToLower() == FullName.ToLower())
                     {
                         employee = item2;
                     }
