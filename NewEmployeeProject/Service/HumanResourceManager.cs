@@ -42,6 +42,7 @@ namespace NewEmployeeProject.Service
         public void EditDepartments(string oldDepname, string newDepname)
         {
             Department department = null;
+            
             foreach (Department item in _departments)
             {
                 if (item.Name.ToLower() == oldDepname.ToLower())
@@ -50,6 +51,8 @@ namespace NewEmployeeProject.Service
                 }
             }
             department.Name = newDepname;
+            
+            
         }
 
         public void RemoveEmployee(string EmpNo, string DepName)
