@@ -135,14 +135,22 @@ namespace NewEmployeeProject
                 string name = Console.ReadLine();
                 int count = 0;
                 bool res = true;
+                double check;
                 if (string.IsNullOrWhiteSpace(name))
                 {
                     Console.WriteLine("Bos ola bilmez");
-                    return;
+                    Console.WriteLine("Yeniden daxil edin");
+                    goto simple;
                 }
                 if (name.Length < 2)
                 {
                     Console.WriteLine("Departament adi minimum 2 herif olmalidir");
+                    Console.WriteLine("Yeniden daxil edin");
+                    goto simple;
+                }
+                if (double.TryParse(name,out check))
+                {
+                    Console.WriteLine("Ancaq reqem daxil ede bilmresiz");
                     Console.WriteLine("Yeniden daxil edin");
                     goto simple;
                 }
@@ -197,19 +205,39 @@ namespace NewEmployeeProject
             }
             static void GetEmployeeList(ref HumanResourceManager humanResourceManager)
             {
-                if (humanResourceManager.Departments.Length < 0)
+                if (humanResourceManager.Departments.Length <= 0)
                 {
                     Console.WriteLine("Once Department yaradin");
+                    return;
                 }
+                
+                int check = 0;
+                int nulll = 0;
                 foreach (Department item in humanResourceManager.Departments)
                 {
-                    if (item.Employees != null && item.Employees.Length <= 0)
+                    foreach (Employee employee in item.Employees)
                     {
-                        Console.WriteLine("Departamentlerivizde iwci yoxdu");
-                        return;
+                        if (employee != null)
+                        {
+                            check++;
+                        }
+                        else
+                        {
+                            nulll++;
+                        }
                     }
-                    
                 }
+                if (nulll > 0 &&  check <= 0)
+                {
+                    Console.WriteLine("Employee listi bosdur");
+                    return;
+                }
+                else if (nulll == 0 && check == 0)
+                {
+                    Console.WriteLine("Employee listi bosdur");
+                    return;
+                }
+                
                 foreach (Department item in humanResourceManager.Departments)
                 {
                     foreach (Employee item2 in item.Employees)
@@ -231,11 +259,6 @@ namespace NewEmployeeProject
                     Console.WriteLine("Once Department yaradmalisiz");
                     return;
                 }
-
-
-
-
-
                 Console.WriteLine("Iscini elave etmek istediyiviz Departamentin adini daxil edin");
                 Console.WriteLine("Movcud olan Departamentinin adini daxil edin");
                 foreach (Department item in humanResourceManager.Departments)
@@ -302,13 +325,20 @@ namespace NewEmployeeProject
                     count = 0;
                 }
                 Console.WriteLine("Employee-nin Adini ve Soyadini daxil edin");
+            winner:
                 string FullName = Console.ReadLine();
+                double str;
+                if (double.TryParse(FullName,out str))
+                {
+                    Console.WriteLine("Tekce reqem daxil ede bilmersiz");
+                    Console.WriteLine("Yeniden daxil edin");
+                    goto winner;
+                }
                 if (string.IsNullOrWhiteSpace(FullName))
                 {
-                    Console.WriteLine("Bos ola bilmez");
-                    Console.WriteLine("Duzgun daxil edin");
-                    FullName = Console.ReadLine();
-                    goto check2;
+                    Console.WriteLine("Full Name bos ola bilmez");
+                    Console.WriteLine("Duzgun daxil edin");                    
+                    goto winner;
                 }
 
                 Console.WriteLine("Iscinin mawini daxil edin");
@@ -366,17 +396,20 @@ namespace NewEmployeeProject
                 {
                     Console.WriteLine("Tekce reqem daxil ede bilmersiz");
                     Console.WriteLine("Yeniden daxil edin");
-                    position = Console.ReadLine();
                     goto again;
                 }
                 if (string.IsNullOrWhiteSpace(position))
                 {
                     Console.WriteLine("Bos ola bilmez");
                     Console.WriteLine("Duzgun daxil edin");
-                    position = Console.ReadLine();
                     goto again;
                 }
-
+                if (position.Length < 2)
+                {
+                    Console.WriteLine("Position adi minimum 2 herifden ibaret olmalidir");
+                    Console.WriteLine("Yeniden daxil edin");
+                    goto again;
+                }
 
                 humanResourceManager.AddEmployee(FullName, salaryNum, departmen, position);
 
@@ -424,8 +457,8 @@ namespace NewEmployeeProject
                     }
                     count = 0;
                 }
-            again:
-                Console.WriteLine("Yeni Departament adini daxil edin");
+                  Console.WriteLine("Yeni Departament adini daxil edin");
+            again:                
                 string NewDepName = Console.ReadLine();
                 int word;
                 bool res1 = true;
@@ -442,11 +475,13 @@ namespace NewEmployeeProject
                     if (check > 0)
                     {
                         Console.WriteLine("Daxil etiyinizz ad movcudur");
-                        NewDepName = Console.ReadLine();
+                        Console.WriteLine("Yeniden daxil edin");
+                        goto again;
                     }
                     else if (int.TryParse(NewDepName, out word))
                     {
                         Console.WriteLine("Reqem daxil ede bilmersiz");
+                        Console.WriteLine("Yeniden daxil edin");
                         goto again;
                     }
                     else
@@ -470,8 +505,7 @@ namespace NewEmployeeProject
                 if (string.IsNullOrWhiteSpace(NewDepName))
                 {
                     Console.WriteLine("Bos ola bilmez");
-                    Console.WriteLine("Duzgun daxil edin");
-                    NewDepName = Console.ReadLine();
+                    Console.WriteLine("Yeniden daxil edin");                    
                     goto again;
                 }
                 humanResourceManager.EditDepartments(DepName, NewDepName);
@@ -499,21 +533,34 @@ namespace NewEmployeeProject
                 string answer = Console.ReadLine();
                 bool res = true;
                 int count = 0;
+                int check = 0;
+                int nulll = 0;
                 foreach (Department item in humanResourceManager.Departments)
                 {
                     if (item.Name.ToLower() == answer.ToLower())
                     {
-                        if (item != null && item.Employees.Length <= 0)
+                        foreach (Employee employee in item.Employees)
                         {
-                            Console.WriteLine("Daxil etdiyiviz Departamente isci yoxdu,once isci elave edin");
-                            return;
-                        }
-                        else if (item == null)
-                        {
-                            Console.WriteLine("Departamente isci yoxdur");
-                            return;
+                            if (employee != null)
+                            {
+                                check++;
+                            }
+                            else
+                            {
+                                nulll++;
+                            }
                         }
                     }
+                }
+                if (nulll > 0 && check <= 0)
+                {
+                    Console.WriteLine("Employee listi bosdur");
+                    return;
+                }
+                else if (nulll == 0 && check == 0)
+                {
+                    Console.WriteLine("Employee listi bosdurr");
+                    return;
                 }
                 while (res)
                 {
@@ -590,13 +637,34 @@ namespace NewEmployeeProject
                 string choose = Console.ReadLine();
                 int count = 0;
                 bool res = true;
+                int check = 0;
+                int nulll = 0;
                 foreach (Department item in humanResourceManager.Departments)
                 {
-                    if (item != null && item.Employees.Length <= 0)
+                    if (item.Name.ToLower() == choose.ToLower())
                     {
-                        Console.WriteLine("Departamentde isci yoxdur");
-                        return;
+                        foreach (Employee employee in item.Employees)
+                        {
+                            if (employee != null)
+                            {
+                                check++;
+                            }
+                            else
+                            {
+                                nulll++;
+                            }
+                        }
                     }
+                }
+                if (nulll > 0 && check <= 0)
+                {
+                    Console.WriteLine("Employee listi bosdur");
+                    return;
+                }
+                else if (nulll == 0 && check == 0)
+                {
+                    Console.WriteLine("Employee listi bosdurr");
+                    return;
                 }
                 while (res)
                 {
@@ -691,6 +759,12 @@ namespace NewEmployeeProject
                     Console.WriteLine("Yeniden daxil edin");
                     goto yess;
                 }
+                else if (NewPosition.Length < 2)
+                {
+                    Console.WriteLine("Position adi minimum 2 herifden ibaret olmalidir");
+                    Console.WriteLine("Yeniden daxil edin");
+                    goto yess;
+                }
                 Console.WriteLine("Iscinin yeni Salary-ni daxil edin");
             strong:
                 string newSalary = Console.ReadLine();
@@ -747,6 +821,7 @@ namespace NewEmployeeProject
                 if (humanResourceManager.Departments.Length <= 0)
                 {
                     Console.WriteLine("Departament siyahisi bosdur,once departament yaradin");
+                    return;
                 }
                 Console.WriteLine("Departament adini daxil edin");
 
@@ -763,16 +838,34 @@ namespace NewEmployeeProject
                 string DepName = Console.ReadLine();
                 bool res = true;
                 int count = 0;
+                int check = 0;
+                int nulll = 0;
                 foreach (Department item in humanResourceManager.Departments)
                 {
                     if (item.Name.ToLower() == DepName.ToLower())
                     {
-                        if (item != null && item.Employees.Length <= 0)
+                        foreach (Employee employee in item.Employees)
                         {
-                            Console.WriteLine("Daxil etdiyiviz Departamente isci yoxdu,once isci elave edin");
-                            return;
+                            if (employee != null)
+                            {
+                                check++;
+                            }
+                            else
+                            {
+                                nulll++;
+                            }
                         }
                     }
+                }
+                if (nulll > 0 && check <= 0)
+                {
+                    Console.WriteLine("Employee listi bosdur");
+                    return;
+                }
+                else if (nulll == 0 && check == 0)
+                {
+                    Console.WriteLine("Employee listi bosdurr");
+                    return;
                 }
                 while (res)
                 {
